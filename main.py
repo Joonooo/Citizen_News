@@ -1,10 +1,11 @@
-import requests
-import xml.etree.ElementTree as ET
 import csv
-import re
-from dotenv import load_dotenv
 import os
+import re
+import xml.etree.ElementTree as ET
+
 from bs4 import BeautifulSoup
+import requests
+from dotenv import load_dotenv
 
 
 # 파일에 텍스트를 추가하는 함수
@@ -16,8 +17,9 @@ def append_to_file(file_path, text):
 def contains_korean(text):
     return bool(re.search('[\uAC00-\uD7AF]', text))  # 한글 유니코드 범위를 사용하여 검사
 
+
 # 출력 파일 경로 설정
-output_file_path = "news.tsv"
+output_file_path = "/opt/bitnami/apache2/program/news.tsv"
 
 # 출력 파일 초기화
 open(output_file_path, 'w').close()
@@ -54,7 +56,7 @@ with open(output_file_path, newline='', encoding='utf-8') as file:
         data.append(row)  # 나머지 데이터 저장
 
 # SQL 명령 작성
-sql_filename = 'upsert_commands.sql'
+sql_filename = '/opt/bitnami/apache2/program/upsert_commands.sql'
 with open(sql_filename, 'w', encoding='utf-8') as sql_file:
     for row in data:
         # INSERT 문 작성
