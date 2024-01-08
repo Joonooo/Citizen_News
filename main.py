@@ -67,13 +67,13 @@ with open(sql_filename, 'w', encoding='utf-8') as sql_file:
 # 환경 변수 로드
 load_dotenv()
 db_password = os.getenv('DB_PASSWORD')  # .env 파일에서 DB 비밀번호 가져오기
-        
+
 # 데이터베이스 정보
 username = 'root'  # 사용자 이름
 database = 'citizen_news'  # 데이터베이스 이름
 
 # MySQL 커맨드 구성
-mysql_command = f"mariadb -u{username} -p{db_password} {database} < {sql_filename}"
+mysql_command = f"/opt/bitnami/mariadb/bin/mariadb -u{username} -p{db_password} {database} < {sql_filename}"
 
 # os.system을 이용하여 커맨드 실행
 status = os.system(mysql_command)
