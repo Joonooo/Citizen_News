@@ -1,20 +1,26 @@
-<h2><?= esc($title) ?></h2>
+<div class="container my-5">
+    <h2 class="mb-4">
+        <?= esc($title) ?>
+    </h2>
 
-<?php if (! empty($news) && is_array($news)) : ?>
-
-    <?php foreach ($news as $news_item): ?>
-        <h3><?= esc($news_item['title']) ?></h3>
-
-        <div class="main">
-            <?= esc($news_item['description']) ?>
+    <?php if (!empty($news) && is_array($news)): ?>
+        <?php foreach ($news as $news_item): ?>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <?= esc($news_item['title']) ?>
+                    </h3>
+                    <p class="card-text">
+                        <?= str_replace("|||", "<br>", esc($news_item['description'])) ?>
+                    </p>
+                    <a href="<?= '/' . $news_item['id'] ?>" class="btn btn-primary">View article</a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="alert alert-warning" role="alert">
+            <h3>No News</h3>
+            <p>Unable to find any news for you.</p>
         </div>
-        <p><a href="<?= '/news/'.$news_item['id'] ?>">View article</a></p>
-
-    <?php endforeach; ?>
-
-<?php else : ?>
-
-    <h3>No News</h3>
-    <p>Unable to find any news for you.</p>
-
-<?php endif ?>
+    <?php endif; ?>
+</div>
