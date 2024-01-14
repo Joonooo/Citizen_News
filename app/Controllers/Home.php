@@ -9,10 +9,12 @@ class Home extends BaseController
     public function index()
     {
         $model = new NewsModel();
+        $categoryQuery = $this->request->getVar('category');
 
         $data = [
-            'news' => $model->getNews(),
-            'title' => '시티즌뉴스',
+            'news' => $model->getNewsByCategory($categoryQuery),
+            'title' => '시티즌뉴스',    
+            'categories' => $model->getDistinctCategories()
         ];
 
         echo view('templates/header', $data);

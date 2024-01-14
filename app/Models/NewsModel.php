@@ -1,4 +1,5 @@
-<?php namespace App\Models;
+<?php
+namespace App\Models;
 
 use CodeIgniter\Model;
 
@@ -14,7 +15,21 @@ class NewsModel extends Model
         }
 
         return $this->asArray()
-                    ->where(['id' => $id])
-                    ->first();
+            ->where(['id' => $id])
+            ->first();
+    }
+
+    public function getDistinctCategories()
+    {
+        return $this->select('category')->distinct()->findAll();
+    }
+
+    public function getNewsByCategory($category = null)
+    {
+        if ($category) {
+            return $this->where('category', $category)->findAll();
+        }
+
+        return $this->findAll();
     }
 }
