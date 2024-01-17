@@ -31,13 +31,13 @@
                     <p class="card-text">
                         <?= str_replace("|||", "<br>", esc($news_item['description'])) ?>
                     </p>
-                    <a href="<?= '/' . $news_item['id'] ?>" class="btn btn-primary">View article</a>
+                    <a href="<?= '/' . $news_item['id'] ?>" class="btn btn-primary">자세히 보기</a>
                 </div>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
         <div class="alert alert-warning" role="alert">
-            <h3>No News</h3>
+            <h3>뉴스가 없음</h3>
             <p>귀하에게 적합한 뉴스를 찾을 수 없습니다.</p>
         </div>
     <?php endif; ?>

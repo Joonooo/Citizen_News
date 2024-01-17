@@ -11,7 +11,7 @@ class NewsModel extends Model
     public function getNews($id = false)
     {
         if ($id === false) {
-            return $this->findAll();
+            return $this->orderBy('id', 'DESC')->findAll();
         }
 
         return $this->asArray()
@@ -27,9 +27,9 @@ class NewsModel extends Model
     public function getNewsByCategory($category = null)
     {
         if ($category) {
-            return $this->where('category', $category)->findAll();
+            return $this->orderBy('id', 'DESC')->where('category', $category)->findAll();
         }
 
-        return $this->findAll();
+        return $this->orderBy('id', 'DESC')->findAll();
     }
 }
