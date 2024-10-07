@@ -1,8 +1,8 @@
 # Citizen_News
 
-뉴스피드 RSS를 MySQL 데이터베이스에 자동갱신 및 CRUD 기능 구현
+MySQL에 저장된 RSS 데이터에 대한 CRUD 기능 구현
 
-CI 4 사용
+- [![CodeIgniter](https://img.shields.io/badge/CodeIgniter-EF4223?style=for-the-badge&logo=codeigniter&logoColor=white)](https://codeigniter.com/) 사용함
 
 </br>
 
