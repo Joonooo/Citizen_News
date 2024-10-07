@@ -67,4 +67,19 @@ class NewsModel extends Model
 
         return $this->countAllResults();
     }
+
+    public function searchNews($searchQuery, $limit = null, $offset = null)
+    {
+        return $this->like('title', $searchQuery)
+            ->orLike('description', $searchQuery)
+            ->orderBy('pubDate', 'DESC')
+            ->findAll($limit, $offset);
+    }
+
+    public function searchNewsCount($searchQuery)
+    {
+        return $this->like('title', $searchQuery)
+            ->orLike('description', $searchQuery)
+            ->countAllResults();
+    }
 }
