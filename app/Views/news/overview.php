@@ -28,7 +28,7 @@
                 <div class="card-body">
                     <h3 class="card-title"><?= esc($news_item['title']) ?></h3>
                     <p class="card-text"><?= str_replace("|||", "<br>", esc($news_item['description'])) ?></p>
-                    <a href="<?= '/' . $news_item['id'] ?>" class="btn btn-primary"
+                    <a href="<?= '/news/' . $news_item['id'] ?>" class="btn btn-primary"
                         aria-label="<?= esc($news_item['title']) ?> 읽기">자세히 보기</a>
                 </div>
             </div>

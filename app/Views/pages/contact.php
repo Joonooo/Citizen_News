@@ -1,12 +1,11 @@
 <div class="container my-5">
-    <h2>Contact Me</h2>
-    <p>If you have any questions or want to collaborate, feel free to reach out to me:</p>
+    <h2>연락처</h2>
+    <p>궁금한 점이 있거나 협업을 원하신다면 언제든지 저에게 연락해 주세요 :)</p>
     <ul>
         <li>Email: <a href="mailto:seonjunwoo@gmail.com">seonjunwoo@gmail.com</a></li>
         <li>GitHub: <a href="https://github.com/Joonooo" target="_blank">github.com/Joonooo</a></li>
     </ul>
 
-    <!-- Contact Form (optional) -->
     <h4>Contact Form:</h4>
     <form action="/send-message" method="post">
         <div class="mb-3">

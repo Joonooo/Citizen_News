@@ -59,17 +59,18 @@ class Home extends BaseController
     public function view($id)
     {
         $newsModel = new NewsModel();
-
+    
         $data['news'] = $newsModel->getNews($id);
-
+    
         if (empty($data['news'])) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Cannot find the news item: ' . $id);
         }
-
+    
         $data['title'] = $data['news']['title'];
-
+        $data['categories'] = $this->categories;
+    
         echo view('templates/header', $data);
         echo view('news/view', $data);
-        echo view('templates/footer');
-    }
+        echo view('templates/footer', $data);
+    }    
 }
