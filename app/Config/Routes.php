@@ -11,6 +11,8 @@ $routes->get('search', 'Search::index'); // 검색 경로
 $routes->get('about', 'Pages::view/about'); // about 페이지
 $routes->get('contact', 'Pages::view/contact'); // contact 페이지
 
+$routes->post('send-message', 'Contact::sendMessage');
+
 // 뉴스 상세 페이지 라우트 추가
 $routes->get('news/(:num)', 'Home::view/$1');
 
