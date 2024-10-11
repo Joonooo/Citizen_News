@@ -19,21 +19,29 @@
 </head>
 
 <body>
+    <div id="loadingOverlay" role="status" aria-live="polite">
+        <div class="loader"></div>
+    </div>
+
     <!-- 네비게이션 바 -->
     <?php $current_uri = uri_string(); ?>
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f9fa;" aria-label="주 네비게이션">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="주 네비게이션">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/images/logo.png" alt="시티즌뉴스 로고" height="30">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/images/logo.png" alt="시티즌뉴스 로고" height="30" class="me-2">
+                <div>
+                    <span class="fw-bold" style="font-size: 1.25rem;">시티즌뉴스</span><br>
+                    <small class="text-muted">시민이 만드는 새로운 뉴스 플랫폼</small>
+                </div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-                aria-label="토글 네비게이션">
+            <!-- 토글 버튼 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="토글 네비게이션">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- 네비게이션 메뉴 -->
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ms-auto">
-
                     <!-- 현재 페이지 활성화 표시 -->
                     <li class="nav-item">
                         <a class="nav-link <?= ($current_uri == '') ? 'active' : '' ?>" href="/">홈</a>
@@ -46,18 +54,24 @@
                     </li>
 
                     <!-- 카테고리 드롭다운 메뉴 -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle <?= ($current_uri == 'category') ? 'active' : '' ?>" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            카테고리
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <?php foreach ($categories as $category): ?>
-                                <li><a class="dropdown-item"
-                                        href="/?category=<?= urlencode($category['category']) ?>"><?= esc($category['category']) ?></a></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </li>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                카테고리
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <?php foreach ($categories as $category): ?>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="/news?category=<?= urlencode($category['category']) ?>">
+                                            <?= esc($category['category']) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                    </ul>
 
                     <!-- 검색 아이콘 -->
                     <li class="nav-item">

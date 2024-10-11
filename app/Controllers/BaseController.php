@@ -8,18 +8,21 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-abstract class BaseController extends Controller
+class BaseController extends Controller
 {
     protected $request;
     protected $helpers = [];
-    protected $categories = []; // 카테고리 변수를 정의합니다.
+    protected $data = []; // 공통 데이터 저장용 프로퍼티
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
+        // 부모의 initController 호출
         parent::initController($request, $response, $logger);
 
-        // 카테고리 데이터를 로드합니다.
+        // NewsModel 인스턴스 생성
         $newsModel = new NewsModel();
-        $this->categories = $newsModel->getDistinctCategories();
+
+        // 카테고리 목록 가져오기
+        $this->data['categories'] = $newsModel->getDistinctCategories();
     }
 }

@@ -42,35 +42,49 @@ class Home extends BaseController
         $news = $newsModel->orderBy('created_at', 'DESC')
                           ->findAll($limit, $offset);
 
-        $data = [
+        // BaseController에서 설정한 공통 데이터와 현재 데이터 병합
+        $data = array_merge($this->data, [
             'news' => $news,
             'title' => '시티즌뉴스',
             'categories' => $categories,
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'categoryQuery' => $categoryQuery
-        ];
+        ]);
 
-        echo view('templates/header', $data);
-        echo view('news/overview', $data);
-        echo view('templates/footer', $data);
+        // 뷰로 데이터 전달 및 반환
+        return view('templates/header', $data)
+               . view('news/overview', $data)
+               . view('templates/footer', $data);
     }
 
     public function view($id)
     {
         $newsModel = new NewsModel();
-    
-        $data['news'] = $newsModel->getNews($id);
-    
-        if (empty($data['news'])) {
+
+        $newsItem = $newsModel->getNews($id);
+
+        if (empty($newsItem)) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Cannot find the news item: ' . $id);
         }
-    
-        $data['title'] = $data['news']['title'];
-        $data['categories'] = $this->categories;
-    
-        echo view('templates/header', $data);
-        echo view('news/view', $data);
-        echo view('templates/footer', $data);
+
+        $data['news'] = $newsItem;
+        $data['title'] = $newsItem['title'];
+        $data['categoryQuery'] = $newsItem['category'] ?? '';
+
+        // BaseController에서 설정한 공통 데이터와 현재 데이터 병합
+        $data = array_merge($this->data, [
+            'news' => $data['news'],
+            'title' => $data['title'],
+            'categoryQuery' => $data['categoryQuery']
+        ]);
+
+        // 카테고리 목록 가져오기 (BaseController의 공통 데이터 사용)
+        $data['categories'] = $this->data['categories'];
+
+        // 뷰로 데이터 전달 및 반환
+        return view('templates/header', $data)
+               . view('news/view', $data)
+               . view('templates/footer', $data);
     }    
 }
