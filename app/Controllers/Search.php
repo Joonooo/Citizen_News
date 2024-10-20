@@ -35,14 +35,14 @@ class Search extends BaseController
             // 뉴스 검색
             $results = $newsModel->searchNews($searchQuery, $limit, $offset);
 
-            $data = [
+            // 공통 데이터와 병합
+            $data = array_merge($this->data, [
                 'title' => '검색 결과',
                 'results' => $results,
                 'searchQuery' => $searchQuery,
                 'currentPage' => $page,
                 'totalPages' => $totalPages,
-                'categories' => $this->categories,
-            ];
+            ]);
 
             echo view('templates/header', $data);
             echo view('search/results', $data);
@@ -52,11 +52,10 @@ class Search extends BaseController
             log_message('error', '검색 오류: ' . $e->getMessage());
 
             // 사용자에게 친절한 오류 메시지 표시
-            $data = [
+            $data = array_merge($this->data, [
                 'title' => '오류 발생',
                 'errorMessage' => '검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-                'categories' => $this->categories,
-            ];
+            ]);
 
             echo view('templates/header', $data);
             echo view('errors/custom_error', $data);

@@ -14,7 +14,7 @@ function linkify($text)
         <div class="col-md-8">
             <div class="card shadow-lg p-4 mb-4">
                 <h2 class="mb-4">
-                    <?= esc($news['title'], 'html') ?>
+                    <?= esc($title, 'html') ?>
                 </h2>
                 <p class="text-muted lead">
                     <?= linkify(nl2br(str_replace("|||", "\n", esc($news['description'], 'html')))) ?>

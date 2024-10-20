@@ -40,7 +40,7 @@ class News extends BaseController
             'categoryQuery' => $categoryQuery,
         ]);
 
-        return view('news/index', $data);
+        return view('news/view', $data);
     }
 
     public function view($id)

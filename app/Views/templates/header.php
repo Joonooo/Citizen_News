@@ -64,15 +64,14 @@
                                 <?php foreach ($categories as $category): ?>
                                     <li>
                                         <a class="dropdown-item"
-                                            href="/news?category=<?= urlencode($category['category']) ?>">
-                                            <?= esc($category['category']) ?>
+                                            href="<?= current_url() ?>?category=<?= urlencode($category['category']) ?>">
+                                            <?= esc($category['category'], 'html') ?>
                                         </a>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
                     </ul>
-
                     <!-- 검색 아이콘 -->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">
