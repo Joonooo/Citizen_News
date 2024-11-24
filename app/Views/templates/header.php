@@ -104,5 +104,7 @@
         </div>
     </div>
 
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="joonoo" data-description="Support me on Buy me a coffee!" data-message="커피 한 잔 사주세요" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+
     <!-- 컨텐츠 시작 -->
     <div class="container mt-4">
