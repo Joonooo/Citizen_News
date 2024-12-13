@@ -20,3 +20,5 @@ $routes->get('news/(:num)', 'News::view/$1');
 
 // 예를 들어, pages/(:segment)로 변경
 $routes->get('pages/(:segment)', 'Pages::view/$1');
+
+$routes->get('rss', 'Feed::index');

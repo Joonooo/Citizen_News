@@ -44,7 +44,8 @@ class Cache extends BaseConfig
      *
      * @deprecated Use the driver-specific variant under $file
      */
-    public string $storePath = WRITEPATH . 'cache/';
+    // public string $storePath = WRITEPATH . 'cache/';
+    public string $storePath = '/opt/bitnami/apache/htdocs/citizen_news/writable/cache/';
 
     /**
      * --------------------------------------------------------------------------
@@ -110,9 +111,13 @@ class Cache extends BaseConfig
      *
      * @var array<string, int|string|null>
      */
+    // public array $file = [
+    //     'storePath' => WRITEPATH . 'cache/',
+    //     'mode'      => 0640,
+    // ];
     public array $file = [
-        'storePath' => WRITEPATH . 'cache/',
-        'mode'      => 0640,
+        'storePath' => '/opt/bitnami/apache/htdocs/citizen_news/writable/cache/',
+        'mode'      => 0644,
     ];
 
     /**

@@ -24,8 +24,9 @@ class NewsModel extends Model
     {
         return $this->select('category')
             ->distinct()
-            ->where('category !=', '') // 빈 문자열 제외
-            ->where('category IS NOT NULL') // NULL 값 제외
+            ->where('category !=', '')
+            ->where('category IS NOT NULL')
+            ->asArray()
             ->findAll();
     }
 
