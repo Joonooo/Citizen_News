@@ -1,52 +1,65 @@
 <?php
 function linkify($text)
 {
-    return $text;
+    return $text; // 단순화
 }
 
 function processLinks($text)
 {
-    // 패턴 1: (앵커 텍스트)[[LINK:URL]]
-    $pattern1 = '/\((.*?)\)\[\[LINK:(.*?)\]\]/';
+    // DOMDocument를 사용하여 HTML 링크 처리
+    $dom = new DOMDocument();
+    libxml_use_internal_errors(true); // HTML 파싱 오류 무시
+    $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
 
-    // 패턴 2: URL[[LINK:URL]]
-    $pattern2 = '/(\bhttps?:\/\/[^\s<>"\'\[\]]+)\[\[LINK:(.*?)\]\]/i';
+    $xpath = new DOMXPath($dom);
+    $textNodes = $xpath->query('//text()');
 
-    // 패턴 1 처리
-    $text = preg_replace_callback($pattern1, function ($matches) {
-        $anchor = $matches[1];
-        $url = htmlspecialchars_decode($matches[2]);
+    foreach ($textNodes as $node) {
+        $parent = $node->parentNode;
 
-        // 이스케이프 처리
-        $safeAnchor = htmlspecialchars($anchor, ENT_QUOTES, 'UTF-8');
-        $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+        if ($parent && $parent->nodeName === 'a') {
+            continue; // 이미 링크인 경우 처리하지 않음
+        }
 
-        return '<a href="' . $safeUrl . '" target="_blank">' . $safeAnchor . '</a>';
-    }, $text);
+        // URL 패턴 매칭
+        $pattern = '/(https?:\/\/[^\s<>"\'\[\]]+)/i';
+        $nodeValue = $node->nodeValue;
 
-    // 패턴 2 처리
-    $text = preg_replace_callback($pattern2, function ($matches) {
-        $anchor = $matches[1];
-        $url = htmlspecialchars_decode($matches[2]);
+        if (preg_match($pattern, $nodeValue)) {
+            $newValue = preg_replace_callback($pattern, function ($matches) {
+                $url = htmlspecialchars($matches[0], ENT_QUOTES, 'UTF-8');
+                return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer">' . $url . '</a>';
+            }, $nodeValue);
 
-        // 이스케이프 처리
-        $safeAnchor = htmlspecialchars($anchor, ENT_QUOTES, 'UTF-8');
-        $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+            $fragment = $dom->createDocumentFragment();
+            $fragment->appendXML($newValue);
+            $parent->replaceChild($fragment, $node);
+        }
+    }
 
-        return '<a href="' . $safeUrl . '" target="_blank">' . $safeAnchor . '</a>';
-    }, $text);
+    // DOM에서 콘텐츠를 반환
+    $body = $dom->getElementsByTagName('body')->item(0);
+    $innerHTML = '';
+    foreach ($body->childNodes as $child) {
+        $innerHTML .= $dom->saveHTML($child);
+    }
 
-    return $text;
+    // 문단 처리 (개행을 <p>로 감싸기)
+    $paragraphs = preg_split('/\n+/', trim($innerHTML));
+    $formattedContent = '';
+    foreach ($paragraphs as $paragraph) {
+        $formattedContent .= '<p>' . trim($paragraph) . '</p>';
+    }
+
+    return $formattedContent;
 }
 
-
-// 이미지 파일 경로 확인 및 설정
+// 이미지 파일 경로 확인 및 설정 (기존 유지)
 $images = [];
 $imageExtensions = ['.png', '.jpg', '.jpeg', '.gif'];
 $imageDir = '/images/';
 $imageFilename = $news['id'];
 
-// 기본 이미지 확인
 $imageFound = false;
 foreach ($imageExtensions as $ext) {
     $imagePath = $imageDir . $imageFilename . $ext;
@@ -59,7 +72,6 @@ foreach ($imageExtensions as $ext) {
     }
 }
 
-// 기본 이미지가 없을 경우 _1, _2, _3 이미지 검색
 if (!$imageFound) {
     $maxImages = 5;
     for ($i = 1; $i <= $maxImages; $i++) {
@@ -74,6 +86,10 @@ if (!$imageFound) {
         }
     }
 }
+
+// 뉴스 본문 처리
+$contentToShow = !empty($news['content']) ? $news['content'] : $news['description'];
+$processedContent = processLinks($contentToShow);
 ?>
 
 <div class="container py-4">
@@ -93,16 +109,19 @@ if (!$imageFound) {
                     <?php endforeach; ?>
                 <?php endif; ?>
 
-                <p class="text-muted lead">
-                    <?php
-                    $contentToShow = !empty($news['content']) ? $news['content'] : $news['description'];
-                    echo nl2br($contentToShow);
-                    ?>
-                </p>
+                <!-- 뉴스 본문 -->
+                <div class="news-content" id="newsContent">
+                    <?= $processedContent ?>
+                </div>
+
+                <!-- "더 보기" 버튼 -->
+                <div class="text-center mt-3">
+                    <button id="toggleContent" class="btn btn-primary">더 보기</button>
+                </div>
             </div>
         </div>
 
-        <!-- 사이드바 영역: 관련 뉴스 -->
+        <!-- 사이드바: 관련 뉴스 -->
         <div class="col-md-4">
             <h4 class="mb-3">관련 뉴스</h4>
             <?php if (!empty($relatedNews)): ?>
@@ -120,3 +139,54 @@ if (!$imageFound) {
         </div>
     </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const contentDiv = document.querySelector('.news-content');
+        const toggleButton = document.getElementById('toggleContent');
+
+        const maxHeight = 400; // 본문 초기 높이
+        if (contentDiv.scrollHeight > maxHeight) {
+            contentDiv.style.height = maxHeight + 'px';
+            contentDiv.style.overflow = 'hidden';
+            contentDiv.classList.add('content-clipped');
+            toggleButton.style.display = 'inline-block';
+        } else {
+            toggleButton.style.display = 'none';
+        }
+
+        toggleButton.addEventListener('click', function () {
+            const isExpanded = contentDiv.style.height === maxHeight + 'px';
+            contentDiv.style.height = isExpanded ? contentDiv.scrollHeight + 'px' : maxHeight + 'px';
+            contentDiv.style.overflow = isExpanded ? 'visible' : 'hidden';
+            contentDiv.classList.toggle('content-clipped', !isExpanded);
+
+            toggleButton.textContent = isExpanded ? '간략히' : '더 보기';
+        });
+    });
+</script>
+
+<!-- CSS -->
+<style>
+    .news-content {
+        transition: height 0.5s ease, mask-image 0.5s ease;
+        position: relative;
+    }
+
+    .news-content.content-clipped {
+        mask-image: linear-gradient(to bottom, black 60%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 60%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    #toggleContent {
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    #toggleContent:hover {
+        transform: scale(1.05);
+        background-color: #0056b3;
+    }
+</style>
